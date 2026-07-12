@@ -33,16 +33,6 @@ This causes wrong expiry dates, human typing errors, incorrect inventory, food s
 
 ---
 
-## 🖼️ Screenshots
-
-> Dashboard showing real-time inspection statistics and pass rate
-
-> Inspection page with live camera feed and OCR results side by side
-
-> History page with searchable inspection records and export functionality
-
----
-
 ## 🛠️ Tech Stack
 
 | Layer | Technology |
