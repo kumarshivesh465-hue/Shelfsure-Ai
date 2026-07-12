@@ -1,0 +1,12 @@
+{
+  "name": "shelfsure-ai",
+  "version": "1.0.0",
+  "description": "AI-powered warehouse inward inspection system",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^28.0.0"
+  }
+}

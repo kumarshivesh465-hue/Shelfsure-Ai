@@ -1,0 +1,25 @@
+# Python
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/logs/
+backend/uploads/
+*.pyc
+*.pyo
+
+# Database
+database/
+
+# Node
+frontend/node_modules/
+electron/node_modules/
+
+# EasyOCR models
+backend/.EasyOCR/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
