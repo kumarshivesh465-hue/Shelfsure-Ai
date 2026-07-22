@@ -6,6 +6,12 @@ Built for the **Zepto Nova Hackathon** — Food Safety Innovation Challenge.
 
 ---
 
+## ⚡ Quick Start (After Setup)
+
+Once setup is complete, just **double-click `Start-ShelfSure.bat`** — the app launches automatically. No terminals needed.
+
+---
+
 ## 📌 The Problem
 
 Large warehouses receive thousands of food products every day. Workers manually:
@@ -51,18 +57,25 @@ This causes wrong expiry dates, human typing errors, incorrect inventory, food s
 
 ## 📋 Prerequisites
 
-Before running this project, make sure you have the following installed:
+Install these before setup (Windows only):
 
-- **Node.js** (v18 or higher) — [Download](https://nodejs.org)
-- **Python** (v3.10 or higher) — [Download](https://python.org/downloads)
+- **Node.js** (v18 or higher) — [Download](https://nodejs.org) → use the LTS version
+- **Python** (v3.10 or higher) — [Download](https://python.org/downloads) → ⚠️ check **"Add Python to PATH"** during install
 - **Git** — [Download](https://git-scm.com)
 - A **webcam** (built-in or USB) — optional, photo upload works without one
 
+Verify all are installed by running in a terminal:
+```bash
+node -v
+python --version
+git --version
+```
+
 ---
 
-## 🚀 Installation & Setup
+## 🚀 One-Time Setup
 
-### 1. Clone the Repository
+### Step 1 — Clone the Repository
 
 ```bash
 git clone https://github.com/kumarshivesh465-hue/Shelfsure-Ai.git
@@ -71,93 +84,53 @@ cd Shelfsure-Ai
 
 ---
 
-### 2. Backend Setup (Python + FastAPI)
+### Step 2 — Backend Setup
 
 ```bash
 cd backend
-
-# Create virtual environment
 python -m venv venv
-
-# Activate virtual environment
-# Windows:
 venv\Scripts\activate
-# macOS/Linux:
-source venv/bin/activate
-
-# Install dependencies
 pip install fastapi uvicorn[standard] opencv-python easyocr pillow sqlalchemy python-multipart aiofiles
-
-# Go back to root
 cd ..
 ```
 
-> ⚠️ **Note:** EasyOCR will automatically download its language model (~100MB) on first run. This only happens once.
+> ⚠️ **Note:** EasyOCR downloads its AI model (~100MB) on first run. This is automatic and only happens once.
 
 ---
 
-### 3. Frontend Setup (React + Vite)
+### Step 3 — Frontend Setup
 
 ```bash
 cd frontend
-
-# Install dependencies
 npm install
-
-# Go back to root
+npm run build
 cd ..
 ```
 
 ---
 
-### 4. Electron Setup
+### Step 4 — Electron Setup
 
 ```bash
 cd electron
-
-# Install dependencies
 npm install
-
-# Go back to root
 cd ..
 ```
 
 ---
 
-## ▶️ Running the Application
+### Step 5 — Run the App
 
-You need **3 terminals** open simultaneously. Run them in this exact order:
+**Double-click `Start-ShelfSure.bat`** in the project folder.
 
-### Terminal 1 — Start the Backend
-```bash
-cd backend
-# Windows:
-venv\Scripts\activate
-# macOS/Linux:
-source venv/bin/activate
+The app will:
+1. Automatically start the Python AI backend
+2. Wait for the backend to be ready
+3. Open the ShelfSure AI desktop window
 
-python main.py
-```
-Wait for: `Uvicorn running on http://127.0.0.1:8000`
+You should see **"Connected"** in green in the top bar. You're ready to start inspecting products.
 
----
-
-### Terminal 2 — Start the Frontend
-```bash
-cd frontend
-npm run dev
-```
-Wait for: `VITE ready` with `localhost:5173`
-
----
-
-### Terminal 3 — Launch the Electron App
-```bash
-cd electron
-npm start
-```
-
-The **ShelfSure AI** desktop window will open. You should see **"Connected"** in green in the top bar.
+> ⚠️ **First launch note:** The first time you run the app, EasyOCR loads its AI model which takes about 30–60 seconds. Subsequent launches are much faster.
 
 ---
 
@@ -166,14 +139,16 @@ The **ShelfSure AI** desktop window will open. You should see **"Connected"** in
 ### Inspecting a Product
 
 1. Open the app and click **"Inspection"** in the sidebar
-2. **Option A:** Hold a product in front of the webcam and click **"Capture Product"**
-3. **Option B:** Click **"Upload Photo"** and select a clear photo taken with your phone (recommended for better accuracy)
-4. The system will automatically:
-   - Extract expiry date, manufacturing date, batch number, and MRP
-   - Validate the product (PASS / FAIL / REVIEW REQUIRED)
-   - Show detailed validation notes
+2. **Option A (Recommended):** Click **"Upload Photo"** and select a clear photo taken with your phone
+3. **Option B:** Hold a product in front of the webcam and click **"Capture Product"**
+4. The system automatically:
+   - Extracts expiry date, manufacturing date, batch number, and MRP
+   - Validates the product (PASS / FAIL / REVIEW REQUIRED)
+   - Shows detailed validation notes
 5. Click **"Confirm Inspection"** to save the record
 6. Click **"Inspect Next Product"** to scan the next item
+
+> 💡 **Tip:** Phone photos give much better OCR accuracy than webcam captures due to higher resolution.
 
 ### Dashboard
 - View today's scan count, pass/fail numbers, and average OCR confidence
@@ -192,7 +167,9 @@ The **ShelfSure AI** desktop window will open. You should see **"Connected"** in
 ## 📁 Project Structure
 
 ```
-shelfsure-ai/
+Shelfsure-Ai/
+├── Start-ShelfSure.bat          # ← Double-click this to launch the app
+│
 ├── electron/                    # Electron desktop shell
 │   ├── main.js                  # Main process — launches app and Python backend
 │   ├── preload.js               # Preload script
@@ -211,17 +188,7 @@ shelfsure-ai/
 ├── backend/                     # Python FastAPI backend
 │   ├── main.py                  # FastAPI app entry point
 │   ├── routers/                 # API route handlers
-│   │   ├── camera.py            # Camera stream, capture, upload
-│   │   ├── ocr.py               # OCR extraction
-│   │   ├── validation.py        # PASS/FAIL validation logic
-│   │   ├── inspection.py        # Inspection CRUD
-│   │   └── dashboard.py         # Stats endpoint
 │   ├── services/                # Core business logic
-│   │   ├── camera_service.py    # OpenCV webcam management
-│   │   ├── ocr_service.py       # EasyOCR + image enhancement
-│   │   ├── date_parser.py       # Expiry date extraction and parsing
-│   │   ├── validation_service.py# Inspection validation rules
-│   │   └── inspection_service.py# Database CRUD operations
 │   ├── models/                  # SQLAlchemy database models
 │   ├── config/                  # App configuration
 │   └── requirements.txt
@@ -247,7 +214,7 @@ shelfsure-ai/
 | DELETE | `/api/inspection/{id}` | Delete inspection |
 | GET | `/api/dashboard/stats` | Get dashboard statistics |
 
-Full interactive API documentation available at `http://127.0.0.1:8000/docs` when the backend is running.
+Full interactive API docs available at `http://127.0.0.1:8000/docs` when the backend is running.
 
 ---
 
@@ -288,9 +255,10 @@ Key settings in `backend/config/settings.py`:
 
 ## 🐛 Known Issues & Workarounds
 
-- **Barcode scanning** — `pyzbar` library has a DLL compatibility issue on Python 3.14 on Windows. Barcode scanning is currently disabled. Will be revisited with an alternative approach.
-- **Camera resolution** — Forcing non-native resolution via DirectShow can freeze the camera driver on some Windows machines. The app uses native resolution (640x480) with software upscaling instead.
-- **Best results** — Upload sharp phone photos rather than relying on webcam capture for highest OCR accuracy.
+- **Barcode scanning** — `pyzbar` has a DLL compatibility issue on Python 3.14 on Windows. Barcode scanning is currently disabled.
+- **Camera resolution** — Forcing non-native resolution via DirectShow can freeze the camera driver on some Windows machines. The app uses native 640x480 with software upscaling instead.
+- **Best OCR results** — Upload sharp phone photos rather than relying on webcam capture for highest accuracy.
+- **First launch is slow** — EasyOCR loads its AI model on first run (~30–60 seconds). Subsequent launches are faster.
 
 ---
 
