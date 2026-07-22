@@ -71,12 +71,20 @@ function createWindow() {
     show: false,
   });
 
-  // Load the app. By default we load the backend-served production build
-  // (http://127.0.0.1:8000). For development with hot-reload, launch with:
-  //   set ELECTRON_START_URL=http://localhost:5173 && npm start
-  const startUrl = process.env.ELECTRON_START_URL || "http://127.0.0.1:8000";
-  console.log(`[Electron] Loading UI from ${startUrl}`);
-  mainWindow.loadURL(startUrl);
+  // Development: load Vite dev server
+  // Production: load built React files directly
+  const isDev = process.env.NODE_ENV === "development";
+
+  if (isDev) {
+    console.log("[Electron] Development mode — loading Vite dev server");
+    mainWindow.loadURL("http://localhost:5173");
+    mainWindow.webContents.openDevTools();
+  } else {
+    console.log("[Electron] Production mode — loading built files");
+    mainWindow.loadFile(
+      path.join(__dirname, "..", "frontend", "dist", "index.html")
+    );
+  }
 
   mainWindow.once("ready-to-show", () => {
     mainWindow.show();
@@ -89,7 +97,7 @@ function createWindow() {
 
 app.whenReady().then(() => {
   startPythonBackend();
-  waitForBackend("http://127.0.0.1:8000/api/health", 10, () => {
+  waitForBackend("http://127.0.0.1:8000/api/health", 30, () => {
     createWindow();
   });
 });
